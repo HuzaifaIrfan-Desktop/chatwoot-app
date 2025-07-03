@@ -33,6 +33,7 @@ class Chatwoot:
         self.setup_websocket()
 
     def setup_contact(self):
+        
         self.contact = create_contact("test@chatwoot.home", "test")
         self.contact_identifier:str = self.contact["source_id"]
         self.pubsub_token:str = self.contact["pubsub_token"]
