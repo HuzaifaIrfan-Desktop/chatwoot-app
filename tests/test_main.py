@@ -8,7 +8,9 @@ from main import ChatWindow
 
 @pytest.fixture
 def chat_window(qtbot):
-    window = ChatWindow()
+    email="pytest@chatwoot.home"
+    name="pytest"
+    window = ChatWindow(email,name)
     qtbot.addWidget(window)
     window.show()
     return window

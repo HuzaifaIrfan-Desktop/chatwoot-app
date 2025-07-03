@@ -16,10 +16,11 @@ settings = Settings()
 print("Chatwoot WS URL:", settings.chatwoot_ws_url)
 
 class Chatwoot:
-    def __init__(self, agent_reply, contact_identifier="", conversation_id="", email="alice@chatwoot.home", name="alice"):
+    def __init__(self, agent_reply, email, name, phone_number="", contact_identifier="", conversation_id=""):
         
         self.email=email
         self.name=name
+        self.phone_number=phone_number
         
         self.ws_url = f"{settings.chatwoot_ws_url}cable"
 
@@ -40,23 +41,29 @@ class Chatwoot:
 
         self.contact = get_contact(self.contact_identifier)
         self.contact_identifier:str = self.contact["source_id"]
-        self.pubsub_token:str = self.contact["pubsub_token"]
+
         
         if not self.contact_identifier:
             self.contact = create_contact(self.email, self.name)
             self.contact_identifier:str = self.contact["source_id"]
-            self.pubsub_token:str = self.contact["pubsub_token"]
+
+        self.pubsub_token:str = self.contact["pubsub_token"]
+        self.email:str = self.contact["email"]
+        self.name:str = self.contact["name"]
+        self.phone_number:str = self.contact["phone_number"]
+
+
 
 
         
     def setup_conversation(self):
 
         self.conversation=get_conversation(self.contact_identifier, self.conversation_id)
-        self.conversation_id=self.conversation["id"]
 
-        if not self.conversation_id:
+        if not self.conversation["id"]:
             self.conversation=create_conversation(self.contact_identifier)
-            self.conversation_id=self.conversation["id"]
+
+        self.conversation_id=self.conversation["id"]
 
 
     def send_message(self, message:str):
@@ -121,7 +128,7 @@ class Chatwoot:
                     if msg_data.get("message_type") == 1:
                         sender_name = msg_data.get("sender", {}).get("name", "Unknown")
                         content = msg_data.get("content", "")
-                        pprint(f"{sender_name} : {content}")
+                        # pprint(f"{sender_name} : {content}")
                         self.agent_reply(sender_name, content)
             else:
                 print("🤔 Unknown message format:")

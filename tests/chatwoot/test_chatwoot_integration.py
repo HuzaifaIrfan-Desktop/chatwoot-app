@@ -9,7 +9,9 @@ from chatwoot.client_apis import  list_messages, create_message, update_message
 
 
 def test_client_apis():
-    contact = create_contact("test@chatwoot.home", "test")
+    email="pytest@chatwoot.home"
+    name="pytest"
+    contact = create_contact(email, name)
     contact_identifier:str = contact["source_id"]
     pubsub_token:str = contact["pubsub_token"]
 
@@ -30,12 +32,10 @@ def test_client_apis():
 
 
 def test_chatwoot_integration():
-
-    def agent_reply(sender_name, content):
-        print(f"{sender_name} : {content}")
-
-
-    chatwoot = Chatwoot(agent_reply)
+    email="pytest@chatwoot.home"
+    name="pytest"
+        
+    chatwoot = Chatwoot(lambda sender_name, agent_content : print(f"{sender_name} : {agent_content}"), email, name)
 
     chatwoot.send_message("pytest")
 
