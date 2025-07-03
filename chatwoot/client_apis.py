@@ -9,6 +9,9 @@ print("Chatwoot URL:", settings.chatwoot_url)
 print("Inbox Identifier:", settings.inbox_identifier)
 print("Contact Identifier:", settings.contact_identifier)
 
+import json
+from pprint import pprint
+
 
 import requests
 
@@ -41,10 +44,15 @@ def get_contact(contact_identifier: str):
     url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}"
 
     response = requests.request("GET", url)
+    
+    try:
+        print(response.json())
 
-    print(response.json())
+        return response.json()
+    except:
+        print(response)
 
-    return response.json()
+        return {"source_id":None, "pubsub_token": None}
 
 
 def update_contact(contact_identifier: str, email: EmailStr, name:str, phone_number:str= ""):
@@ -96,9 +104,28 @@ def get_conversation(contact_identifier: str, conversation_id: str):
 
     response = requests.request("GET", url)
 
-    print(response.json())
+    pprint(response.json())
+
+    try:
+        if isinstance(response.json(), list):
+            if len(response.json()) <= 0:
+                return {"id":None}
+            else:
+                return response.json()[0]
+    except:
+        pass
+
+    try:
+        if response.json()["status"]==404:
+            print("get_conversation status 404")
+            return {"id":None}
+    except:
+        pass
+ 
+
 
     return response.json()
+
 
 
 def resolve_conversation(contact_identifier: str, conversation_id: str):

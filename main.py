@@ -7,10 +7,8 @@ from PyQt6.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout,
     QTextEdit, QLineEdit, QPushButton
 )
-from PyQt6.QtCore import Qt
 
-
-from PyQt6.QtCore import QThread, pyqtSignal, QObject
+from PyQt6.QtCore import QThread, QObject, QSettings
 
 # Worker object to handle WebSocket logic
 class ChatWootWorker(QObject):
@@ -28,11 +26,34 @@ class ChatWindow(QWidget):
         self.setGeometry(100, 100, 400, 500)
         self.init_ui()
 
+        self._settings = QSettings("HuzaifaIrfan", "ChatwootApp")
+        self.load_settings()
+
+
         # Create chatwoot instance with agent_reply
-        self.chatwoot = Chatwoot(self.agent_reply)
+        self.chatwoot = Chatwoot(self.agent_reply, self.contact_identifier, self.conversation_id)
 
         # Start WebSocket in a thread
         self.start_websocket_thread()
+
+
+        self.contact_identifier=self.chatwoot.contact_identifier
+        self.conversation_id=self.chatwoot.conversation_id
+        self.save_settings()
+
+    def load_settings(self):     
+        self.contact_identifier: str = self._settings.value("contact_identifier", "")
+        self.conversation_id: str = self._settings.value("conversation_id", "")
+
+    def save_settings(self):
+        self._settings.setValue("contact_identifier", self.contact_identifier)
+        self._settings.setValue("conversation_id", self.conversation_id)
+
+    def clear_settings(self):
+        self.contact_identifier = ""
+        self.conversation_id = ""
+        self.save_settings()
+
 
     def start_websocket_thread(self):
         self.thread = QThread()

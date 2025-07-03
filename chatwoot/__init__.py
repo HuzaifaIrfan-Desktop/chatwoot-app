@@ -16,31 +16,48 @@ settings = Settings()
 print("Chatwoot WS URL:", settings.chatwoot_ws_url)
 
 class Chatwoot:
-    def __init__(self, agent_reply):
-        self.agent_reply=agent_reply
+    def __init__(self, agent_reply, contact_identifier="", conversation_id="", email="alice@chatwoot.home", name="alice"):
+        
+        self.email=email
+        self.name=name
         
         self.ws_url = f"{settings.chatwoot_ws_url}cable"
 
         self.contact={}
-        self.contact_identifier:str = ""
+        self.contact_identifier:str = contact_identifier
         self.pubsub_token:str = ""
         self.conversation={}
-        self.conversation_id:str = ""
+        self.conversation_id:str = conversation_id
 
         self.setup_contact()
         self.setup_conversation()
 
         self.setup_websocket()
 
+        self.agent_reply=agent_reply
+
     def setup_contact(self):
-        
-        self.contact = create_contact("test@chatwoot.home", "test")
+
+        self.contact = get_contact(self.contact_identifier)
         self.contact_identifier:str = self.contact["source_id"]
         self.pubsub_token:str = self.contact["pubsub_token"]
         
+        if not self.contact_identifier:
+            self.contact = create_contact(self.email, self.name)
+            self.contact_identifier:str = self.contact["source_id"]
+            self.pubsub_token:str = self.contact["pubsub_token"]
+
+
+        
     def setup_conversation(self):
-        self.conversation=create_conversation(self.contact_identifier)
-        self.conversation_id=str(self.conversation["id"])
+
+        self.conversation=get_conversation(self.contact_identifier, self.conversation_id)
+        self.conversation_id=self.conversation["id"]
+
+        if not self.conversation_id:
+            self.conversation=create_conversation(self.contact_identifier)
+            self.conversation_id=self.conversation["id"]
+
 
     def send_message(self, message:str):
         message=create_message(self.contact_identifier, self.conversation_id, message)
