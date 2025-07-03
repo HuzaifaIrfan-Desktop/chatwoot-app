@@ -8,6 +8,17 @@ dependencies = [
     "pydantic>=2.11.7",
     "pydantic-settings>=2.10.1",
     "pytest>=8.4.1",
+    "pytest-async>=0.1.1",
     "pytest-cov>=6.2.1",
     "requests>=2.32.4",
 ]
+
+[tool.pytest.ini_options]
+addopts = "-s --cov=. --cov-report=html --cov-report=term-missing --cov-fail-under=70"
+# This is the directory where pytest will look for tests
+# and the naming conventions for test files and functions.
+# Adjust these as necessary for your project structure.
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+
