@@ -1,5 +1,7 @@
 
 
+from chatwoot import Chatwoot
+
 from chatwoot.client_apis import create_contact, get_contact, update_contact
 from chatwoot.client_apis import list_conversations, create_conversation, get_conversation, resolve_conversation, toggle_typing_status_on, toggle_typing_status_off, update_last_seen
 from chatwoot.client_apis import  list_messages, create_message, update_message
@@ -25,3 +27,16 @@ def test_client_apis():
 
     update_message(contact_identifier, conversation_id, message_id)
     list_messages(contact_identifier, conversation_id)
+
+
+def test_chatwoot_integration():
+
+    def agent_reply(sender_name, content):
+        print(f"{sender_name} : {content}")
+
+
+    chatwoot = Chatwoot(agent_reply)
+
+    chatwoot.send_message("pytest")
+
+    # chatwoot.run_websocket()
