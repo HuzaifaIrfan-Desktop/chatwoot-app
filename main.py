@@ -1,8 +1,8 @@
 
 
-from chatwoot import create_contact, get_contact, update_contact
-from chatwoot import list_conversations, create_conversation, get_conversation
-from chatwoot import  list_messages, create_message, update_message
+from chatwoot.client_apis import create_contact, get_contact, update_contact
+from chatwoot.client_apis import list_conversations, create_conversation, get_conversation
+from chatwoot.client_apis import  list_messages, create_message, update_message
 
 
 contact = create_contact("test@chatwoot.home", "test")
