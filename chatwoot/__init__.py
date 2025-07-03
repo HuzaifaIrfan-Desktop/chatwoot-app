@@ -16,7 +16,9 @@ settings = Settings()
 print("Chatwoot WS URL:", settings.chatwoot_ws_url)
 
 class Chatwoot:
-    def __init__(self):
+    def __init__(self, agent_reply):
+        self.agent_reply=agent_reply
+        
         self.ws_url = f"{settings.chatwoot_ws_url}cable"
 
         self.contact={}
@@ -102,7 +104,7 @@ class Chatwoot:
                         sender_name = msg_data.get("sender", {}).get("name", "Unknown")
                         content = msg_data.get("content", "")
                         pprint(f"{sender_name} : {content}")
-                        # add_message(sender_name, content)
+                        self.agent_reply(sender_name, content)
             else:
                 print("🤔 Unknown message format:")
                 pprint(data)
