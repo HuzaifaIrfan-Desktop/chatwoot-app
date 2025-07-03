@@ -12,6 +12,9 @@ print("Contact Identifier:", settings.contact_identifier)
 
 import requests
 
+# https://developers.chatwoot.com/api-reference/introduction
+## Chatwoot Client APIs - Contacts API
+
 def create_contact(email: EmailStr, name:str, phone_number:str= ""):
 
     url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts"
@@ -65,6 +68,7 @@ def update_contact(contact_identifier: str, email: EmailStr, name:str, phone_num
     return response.json()
 
 
+## Chatwoot Client APIs - Conversations API
 
 def list_conversations(contact_identifier: str):
     url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations"
@@ -91,6 +95,106 @@ def get_conversation(contact_identifier: str, conversation_id: str):
     url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}"
 
     response = requests.request("GET", url)
+
+    print(response.json())
+
+    return response.json()
+
+
+def resolve_conversation(contact_identifier: str, conversation_id: str):
+
+    url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}/toggle_status"
+
+    response = requests.request("POST", url)
+
+    print(response.json())
+
+    return response.json()
+
+
+def toggle_typing_status_on(contact_identifier: str, conversation_id: str):
+
+    url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}/toggle_typing"
+
+    payload = {"typing_status": "on"}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.request("POST", url, json=payload, headers=headers)
+
+    print(response.json())
+
+    return response.json()
+
+def toggle_typing_status_off(contact_identifier: str, conversation_id: str):
+
+    url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}/toggle_typing"
+
+    payload = {"typing_status": "off"}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.request("POST", url, json=payload, headers=headers)
+
+    print(response.json())
+
+    return response.json()
+
+
+
+def update_last_seen(contact_identifier: str, conversation_id: str):
+
+    url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}/update_last_seen"
+
+    response = requests.request("POST", url)
+
+    print(response.json())
+
+    return response.json()
+
+
+## Chatwoot Client APIs - Messages API
+
+def list_messages(contact_identifier: str, conversation_id: str):
+
+    url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}/messages"
+
+    response = requests.request("GET", url)
+
+    print(response.json())
+
+    return response.json()
+
+def create_message(contact_identifier: str, conversation_id: str, message: str):
+
+    url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}/messages"
+
+    payload = {
+        "content": message,
+        "echo_id": "1234567890"
+    }
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.request("POST", url, json=payload, headers=headers)
+
+    print(response.json())
+
+    return response.json()
+
+def update_message(contact_identifier: str, conversation_id: str, message_id: str):
+
+    url = f"{settings.chatwoot_url}/public/api/v1/inboxes/{settings.inbox_identifier}/contacts/{contact_identifier}/conversations/{conversation_id}/messages/{message_id}"
+
+    payload = {"submitted_values": {
+            "name": "My Name",
+            "title": "My Title",
+            "value": "value",
+            "csat_survey_response": {
+                "feedback_message": "Great service!",
+                "rating": 5
+            }
+        }}
+    headers = {"Content-Type": "application/json"}
+
+    response = requests.request("PATCH", url, json=payload, headers=headers)
 
     print(response.json())
 
