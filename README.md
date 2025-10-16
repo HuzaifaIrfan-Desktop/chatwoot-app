@@ -41,3 +41,5 @@ uv run pyinstaller chatwoot-app.spec
 # 📜 License
 
 Licensed under the GPL3 License, Copyright 2025 Huzaifa Irfan. [LICENSE](LICENSE)
+
+Last Updated on 2025-07-03
